@@ -1,6 +1,6 @@
 package com.shop.generic.productservice.repositories;
 
-import com.shop.generic.productservice.entities.Product;
+import com.shop.generic.common.entities.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

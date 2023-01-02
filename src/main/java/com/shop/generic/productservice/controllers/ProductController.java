@@ -1,14 +1,13 @@
 package com.shop.generic.productservice.controllers;
 
+import com.shop.generic.common.valueobjects.ProductVO;
 import com.shop.generic.productservice.services.ProductService;
-import com.shop.generic.productservice.valueobjects.ProductVO;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -28,7 +27,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ProductVO retrieveProductById(@PathVariable String productId){
+    public ProductVO retrieveProductById(@PathVariable String productId) {
         log.info("Request made to find product {}", productId);
         return this.productService.findProductById(Integer.parseInt(productId));
     }
