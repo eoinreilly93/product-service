@@ -1,8 +1,8 @@
 package com.shop.generic.productservice.exceptions;
 
-public class NoProductException extends Exception {
+public class ProductDoesNotExistException extends Exception {
 
-    public NoProductException(final int productId) {
+    public ProductDoesNotExistException(final int productId) {
         super("No product with Product ID " + productId + " exists");
     }
 }
