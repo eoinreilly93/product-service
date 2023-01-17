@@ -8,7 +8,6 @@ import com.shop.generic.productservice.exceptions.ProductDoesNotExistException;
 import com.shop.generic.productservice.services.ProductService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,21 +33,19 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    public List<ProductVO> retrieveAllAvailableProducts() {
+    public ResponseEntity<RestApiResponse<List<ProductVO>>> retrieveAllProducts() {
         log.info("Request made to get all products");
-        return this.productService.findAllProducts();
+        return ResponseEntity.ok(this.restApiResponseFactory.createSuccessResponse(
+                this.productService.findAllProducts()));
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity retrieveProductById(@PathVariable final String productId) {
+    public ResponseEntity<RestApiResponse<ProductVO>> retrieveProductById(
+            @PathVariable final String productId) throws ProductDoesNotExistException {
         log.info("Request made to find product {}", productId);
-        try {
-            final ProductVO productVO = this.productService.retrieveProductById(
-                    Integer.parseInt(productId));
-            return ResponseEntity.ok().body(productVO);
-        } catch (final Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        final ProductVO productVO = this.productService.retrieveProductById(
+                Integer.parseInt(productId));
+        return ResponseEntity.ok(this.restApiResponseFactory.createSuccessResponse(productVO));
     }
 
     @Transactional
@@ -63,16 +60,10 @@ public class ProductController {
     }
 
     @GetMapping(value = "/{productIds}/details", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity retrieveProductDetails(
-            @PathVariable final List<String> productIds) {
-        log.info("Checking availability status for product ids: {}", productIds);
-        try {
-            final List<ProductVO> productVOS = this.productService.fetchProductDetails(productIds);
-            return ResponseEntity.ok(productVOS);
-        } catch (final ProductDoesNotExistException e) {
-            //TODO: Handle this in controller advice
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
-        }
+    public ResponseEntity<RestApiResponse<List<ProductVO>>> retrieveProductDetails(
+            @PathVariable final List<String> productIds) throws ProductDoesNotExistException {
+        log.info("Fetching details for products: {}", productIds);
+        final List<ProductVO> productVOS = this.productService.fetchProductDetails(productIds);
+        return ResponseEntity.ok(this.restApiResponseFactory.createSuccessResponse(productVOS));
     }
 }
