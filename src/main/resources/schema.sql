@@ -1,5 +1,5 @@
 CREATE TABLE product (
-   product_id INT NOT NULL,
+   product_id SERIAL NOT NULL,
    name VARCHAR(255) NOT NULL,
    price DECIMAL NOT NULL,
    stock_status VARCHAR(20) NOT NULL,
