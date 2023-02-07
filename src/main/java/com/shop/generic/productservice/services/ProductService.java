@@ -72,4 +72,15 @@ public class ProductService {
         }
         return productVOS;
     }
+
+    public List<ProductVO> getProductsByIds(final List<Integer> productIds) {
+        final List<Product> products = productRepository.findAllById(productIds);
+        if (products.size() != productIds.size()) {
+            final List<Integer> missingIds = productIds.stream()
+                    .filter(id -> products.stream().noneMatch(p -> p.getProductId().equals(id)))
+                    .toList();
+            throw new ProductDoesNotExistException(missingIds);
+        }
+        return products.stream().map(ProductVO::new).toList();
+    }
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -65,5 +66,13 @@ public class ProductController {
         log.info("Fetching details for products: {}", productIds);
         final List<ProductVO> productVOS = this.productService.fetchProductDetails(productIds);
         return ResponseEntity.ok(this.restApiResponseFactory.createSuccessResponse(productVOS));
+    }
+
+    @GetMapping
+    public ResponseEntity<RestApiResponse<List<ProductVO>>> getProducts(
+            @RequestParam final List<Integer> productIds) {
+        log.info("Request made to fetch products {}", productIds);
+        final List<ProductVO> products = productService.getProductsByIds(productIds);
+        return ResponseEntity.ok(this.restApiResponseFactory.createSuccessResponse(products));
     }
 }
