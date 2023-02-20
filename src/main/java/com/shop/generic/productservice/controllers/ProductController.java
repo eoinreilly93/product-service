@@ -60,14 +60,6 @@ public class ProductController {
                 restApiResponseFactory.createSuccessResponse("Product stock successfully updated"));
     }
 
-    @GetMapping(value = "/{productIds}/details", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestApiResponse<List<ProductVO>>> retrieveProductDetails(
-            @PathVariable final List<String> productIds) throws ProductDoesNotExistException {
-        log.info("Fetching details for products: {}", productIds);
-        final List<ProductVO> productVOS = this.productService.fetchProductDetails(productIds);
-        return ResponseEntity.ok(this.restApiResponseFactory.createSuccessResponse(productVOS));
-    }
-
     @GetMapping
     public ResponseEntity<RestApiResponse<List<ProductVO>>> getProducts(
             @RequestParam final List<Integer> productIds) {

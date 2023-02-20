@@ -5,7 +5,6 @@ import com.shop.generic.common.valueobjects.ProductVO;
 import com.shop.generic.common.valueobjects.PurchaseProductVO;
 import com.shop.generic.productservice.exceptions.ProductDoesNotExistException;
 import com.shop.generic.productservice.repositories.ProductRepository;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -58,19 +57,6 @@ public class ProductService {
     //TODO: This can probably be removed
     private Optional<Product> findProductById(final int productId) {
         return this.productRepository.findById(productId);
-    }
-
-    public List<ProductVO> fetchProductDetails(final List<String> productIds)
-            throws ProductDoesNotExistException {
-        final List<ProductVO> productVOS = new ArrayList<>();
-        //This can't be written using Streams API because if you look at the Consumer<T> interface,
-        // the accept method (which is what this method reference would effectively be using) isn't declared to throw
-        // any checked exceptions - therefore you can't use a method reference which is declared to throw a checked exception
-        for (final String s : productIds) {
-            final ProductVO productVO = retrieveProductById(Integer.parseInt(s));
-            productVOS.add(productVO);
-        }
-        return productVOS;
     }
 
     public List<ProductVO> getProductsByIds(final List<Integer> productIds) {
