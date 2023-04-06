@@ -11,10 +11,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shop.generic.common.dtos.ProductDTO;
 import com.shop.generic.common.enums.StockStatus;
 import com.shop.generic.common.rest.response.RestApiResponse;
 import com.shop.generic.common.rest.response.RestApiResponseFactory;
-import com.shop.generic.common.valueobjects.ProductVO;
 import com.shop.generic.productservice.services.ProductService;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -47,7 +47,7 @@ class ProductControllerTest {
     @Autowired
     private JacksonTester<
             RestApiResponse
-                    <List<ProductVO>>> jacksonTester;
+                    <List<ProductDTO>>> jacksonTester;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -61,21 +61,22 @@ class ProductControllerTest {
     @Test
     public void should_ReturnAllProducts() throws Exception {
 
-        final ProductVO productVO1 = new ProductVO(1, "Test", BigDecimal.TEN, StockStatus.AVAILABLE,
+        final ProductDTO productDTO1 = new ProductDTO(1, "Test", BigDecimal.TEN,
+                StockStatus.AVAILABLE,
                 100);
-        final ProductVO productVO2 = new ProductVO(2, "Test 2", BigDecimal.ONE,
+        final ProductDTO productDTO2 = new ProductDTO(2, "Test 2", BigDecimal.ONE,
                 StockStatus.AVAILABLE,
                 150);
 
-        final List<ProductVO> productVOList = List.of(productVO1, productVO2);
-        final RestApiResponse<List<ProductVO>> mockApiResponse = new RestApiResponse<>(null, null,
-                productVOList,
+        final List<ProductDTO> productDTOList = List.of(productDTO1, productDTO2);
+        final RestApiResponse<List<ProductDTO>> mockApiResponse = new RestApiResponse<>(null, null,
+                productDTOList,
                 LocalDateTime.now());
 
         given(productService.findAllProducts())
-                .willReturn(productVOList);
+                .willReturn(productDTOList);
         given(restApiResponseFactory.createSuccessResponse(
-                productVOList))
+                productDTOList))
                 .willReturn(mockApiResponse);
 
         /**
@@ -103,7 +104,7 @@ class ProductControllerTest {
          * Third way of testing by comparing the actual objects
          */
         final String responseAsString = response.getContentAsString();
-        final RestApiResponse<List<ProductVO>> responseAsObject = objectMapper.readValue(
+        final RestApiResponse<List<ProductDTO>> responseAsObject = objectMapper.readValue(
                 responseAsString,
                 new TypeReference<>() {
                 });

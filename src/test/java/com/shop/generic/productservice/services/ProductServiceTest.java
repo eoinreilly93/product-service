@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
+import com.shop.generic.common.dtos.ProductDTO;
 import com.shop.generic.common.entities.Product;
-import com.shop.generic.common.valueobjects.ProductVO;
 import com.shop.generic.productservice.exceptions.ProductDoesNotExistException;
 import com.shop.generic.productservice.repositories.ProductRepository;
 import java.util.List;
@@ -33,7 +33,7 @@ class ProductServiceTest {
         final List<Product> productList = generator.objects(Product.class, 5).toList();
         given(this.productRepository.findAll()).willReturn(productList);
 
-        final List<ProductVO> result = this.productService.findAllProducts();
+        final List<ProductDTO> result = this.productService.findAllProducts();
         assertEquals(result.size(), 5);
     }
 

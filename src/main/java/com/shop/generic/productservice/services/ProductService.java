@@ -1,8 +1,8 @@
 package com.shop.generic.productservice.services;
 
+import com.shop.generic.common.dtos.ProductDTO;
+import com.shop.generic.common.dtos.PurchaseProductDTO;
 import com.shop.generic.common.entities.Product;
-import com.shop.generic.common.valueobjects.ProductVO;
-import com.shop.generic.common.valueobjects.PurchaseProductVO;
 import com.shop.generic.productservice.exceptions.ProductDoesNotExistException;
 import com.shop.generic.productservice.repositories.ProductRepository;
 import java.util.List;
@@ -20,36 +20,36 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductVO> findAllProducts() {
-        return this.productRepository.findAll().stream().map(ProductVO::new).toList();
+    public List<ProductDTO> findAllProducts() {
+        return this.productRepository.findAll().stream().map(ProductDTO::new).toList();
     }
 
-    public ProductVO retrieveProductById(final int productId) throws ProductDoesNotExistException {
+    public ProductDTO retrieveProductById(final int productId) throws ProductDoesNotExistException {
         final Product product = findProductById(productId).orElseThrow(
                 () -> new ProductDoesNotExistException(productId));
-        return new ProductVO(product);
+        return new ProductDTO(product);
     }
 
-    public void updateProductsStock(final List<PurchaseProductVO> purchaseProductVOS)
+    public void updateProductsStock(final List<PurchaseProductDTO> purchaseProductDTOS)
             throws ProductDoesNotExistException {
 
-        for (final PurchaseProductVO purchaseProductVO : purchaseProductVOS) {
+        for (final PurchaseProductDTO purchaseProductDTO : purchaseProductDTOS) {
             //Retrieve stock count for product id
             //TODO: Replace exception handling here with same logic above
-            final Optional<Product> product = findProductById(purchaseProductVO.productId());
+            final Optional<Product> product = findProductById(purchaseProductDTO.productId());
 
             if (product.isPresent()) {
                 final int newStockCountValue =
-                        product.get().getStockCount() - purchaseProductVO.quantity();
+                        product.get().getStockCount() - purchaseProductDTO.quantity();
                 //Update the stock of that product id
                 log.info("Updating product {} stock value from {} to {}",
-                        purchaseProductVO.productId(), product.get().getStockCount(),
+                        purchaseProductDTO.productId(), product.get().getStockCount(),
                         newStockCountValue);
                 this.productRepository.updateStockCountByProductId(newStockCountValue,
-                        purchaseProductVO.productId());
-                log.info("Product {} stock updated", purchaseProductVO.productId());
+                        purchaseProductDTO.productId());
+                log.info("Product {} stock updated", purchaseProductDTO.productId());
             } else {
-                throw new ProductDoesNotExistException(purchaseProductVO.productId());
+                throw new ProductDoesNotExistException(purchaseProductDTO.productId());
             }
         }
     }
@@ -59,7 +59,7 @@ public class ProductService {
         return this.productRepository.findById(productId);
     }
 
-    public List<ProductVO> getProductsByIds(final List<Integer> productIds) {
+    public List<ProductDTO> getProductsByIds(final List<Integer> productIds) {
         final List<Product> products = productRepository.findAllById(productIds);
         if (products.size() != productIds.size()) {
             final List<Integer> missingIds = productIds.stream()
@@ -67,6 +67,6 @@ public class ProductService {
                     .toList();
             throw new ProductDoesNotExistException(missingIds);
         }
-        return products.stream().map(ProductVO::new).toList();
+        return products.stream().map(ProductDTO::new).toList();
     }
 }

@@ -1,9 +1,9 @@
 package com.shop.generic.productservice.controllers;
 
+import com.shop.generic.common.dtos.ProductDTO;
+import com.shop.generic.common.dtos.PurchaseProductDTO;
 import com.shop.generic.common.rest.response.RestApiResponse;
 import com.shop.generic.common.rest.response.RestApiResponseFactory;
-import com.shop.generic.common.valueobjects.ProductVO;
-import com.shop.generic.common.valueobjects.PurchaseProductVO;
 import com.shop.generic.productservice.exceptions.ProductDoesNotExistException;
 import com.shop.generic.productservice.services.ProductService;
 import java.util.List;
@@ -34,37 +34,37 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<RestApiResponse<List<ProductVO>>> retrieveAllProducts() {
+    public ResponseEntity<RestApiResponse<List<ProductDTO>>> retrieveAllProducts() {
         log.info("Request made to get all products");
         return ResponseEntity.ok(this.restApiResponseFactory.createSuccessResponse(
                 this.productService.findAllProducts()));
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<RestApiResponse<ProductVO>> retrieveProductById(
+    public ResponseEntity<RestApiResponse<ProductDTO>> retrieveProductById(
             @PathVariable final String productId) throws ProductDoesNotExistException {
         log.info("Request made to find product {}", productId);
-        final ProductVO productVO = this.productService.retrieveProductById(
+        final ProductDTO productDTO = this.productService.retrieveProductById(
                 Integer.parseInt(productId));
-        return ResponseEntity.ok(this.restApiResponseFactory.createSuccessResponse(productVO));
+        return ResponseEntity.ok(this.restApiResponseFactory.createSuccessResponse(productDTO));
     }
 
     @Transactional
     @PostMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestApiResponse<String>> updateProducts(
-            @RequestBody final List<PurchaseProductVO> purchaseProductVOS)
+            @RequestBody final List<PurchaseProductDTO> purchaseProductDTOS)
             throws ProductDoesNotExistException {
-        log.info("Received request to update products: {}", purchaseProductVOS);
-        this.productService.updateProductsStock(purchaseProductVOS);
+        log.info("Received request to update products: {}", purchaseProductDTOS);
+        this.productService.updateProductsStock(purchaseProductDTOS);
         return ResponseEntity.ok(
                 restApiResponseFactory.createSuccessResponse("Product stock successfully updated"));
     }
 
     @GetMapping
-    public ResponseEntity<RestApiResponse<List<ProductVO>>> getProducts(
+    public ResponseEntity<RestApiResponse<List<ProductDTO>>> getProducts(
             @RequestParam final List<Integer> productIds) {
         log.info("Request made to fetch products {}", productIds);
-        final List<ProductVO> products = productService.getProductsByIds(productIds);
+        final List<ProductDTO> products = productService.getProductsByIds(productIds);
         return ResponseEntity.ok(this.restApiResponseFactory.createSuccessResponse(products));
     }
 }
