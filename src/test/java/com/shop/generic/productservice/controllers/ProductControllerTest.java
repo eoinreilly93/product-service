@@ -61,9 +61,10 @@ class ProductControllerTest {
     @Test
     public void should_ReturnAllProducts() throws Exception {
 
-        final ProductVO productVO1 = new ProductVO("Test", BigDecimal.TEN, StockStatus.AVAILABLE,
+        final ProductVO productVO1 = new ProductVO(1, "Test", BigDecimal.TEN, StockStatus.AVAILABLE,
                 100);
-        final ProductVO productVO2 = new ProductVO("Test 2", BigDecimal.ONE, StockStatus.AVAILABLE,
+        final ProductVO productVO2 = new ProductVO(2, "Test 2", BigDecimal.ONE,
+                StockStatus.AVAILABLE,
                 150);
 
         final List<ProductVO> productVOList = List.of(productVO1, productVO2);
