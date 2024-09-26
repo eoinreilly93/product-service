@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
-@SpringBootApplication(scanBasePackages = "com.shop.generic")
+@SpringBootApplication
 @EntityScan("com.shop.generic.common.entities")
 public class ProductServiceApplication {
 
