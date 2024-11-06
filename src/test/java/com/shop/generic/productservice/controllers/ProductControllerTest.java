@@ -24,6 +24,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.json.JacksonTester;
@@ -38,10 +39,13 @@ import org.springframework.test.web.servlet.MockMvc;
  * perform the requests. The annotation only loads a partial context (the controller and it's
  * surrounding configuration like filters and advices) We also don't need to include SpringExtension
  * here as it is included by default on all Spring's @...Test shortcut annotations
+ * <p>
+ * The order of these annotations matters. If you put @AutoConfigureJsonTesters it doesn't exclude
+ * the SecurityAutoConfiguration for some reason, adn the tests will fail due to spring security
  */
 
+@WebMvcTest(value = ProductController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 @AutoConfigureJsonTesters
-@WebMvcTest(ProductController.class)
 class ProductControllerTest {
 
     @Autowired
