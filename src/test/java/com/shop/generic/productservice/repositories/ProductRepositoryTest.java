@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -29,12 +28,6 @@ class ProductRepositoryTest {
 
     @Autowired
     private ProductRepository productRepository;
-
-    @BeforeEach
-    public void setUp() {
-        //TODO: This is temporary work around until I figure out what to do about the data.sql being used in tests without wanting it to be
-        this.productRepository.deleteAll();
-    }
 
     @Test
     public void should_findAllProducts() {
